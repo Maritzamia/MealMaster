@@ -1,0 +1,23 @@
+MealMaster User Guide
+
+Overview:
+MealMaster is a command-line application to manage menu items, inventory, orders, and employee records for a restaurant.
+
+How to Run:
+- Windows: Double-click MealMaster.exe or run it in Command Prompt.
+- Mac/Linux: Use Terminal and run ./MealMaster
+
+Main Menu Options:
+1. View Menu              - See all menu items and prices
+2. Place Order            - Select items and generate a receipt
+3. View Inventory         - Check stock levels
+4. Add/Edit Menu Item     - Add new dishes and prices
+5. Employee Management    - Add/view/delete employees
+6. Edit Inventory Quantity- Change quantity of inventory items
+0. Exit                   - Exit the program
+
+Tips:
+- Only enter numbers in menus
+- Use valid names (letters only)
+- Shift options: Morning, Afternoon, Night
+- Menu and inventory auto-save after changes

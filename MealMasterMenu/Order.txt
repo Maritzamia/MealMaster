@@ -1,0 +1,5 @@
+Burger,2,5.99
+Fries,1,2.49
+Soda,3,1.50
+Pizza,2,8.75
+Salad,1,4.25

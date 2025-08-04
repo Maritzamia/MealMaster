@@ -1,0 +1,4 @@
+Burger,2,5.99
+Orange,20,0.75
+Soda,2,1.5
+Burger,3,5.99
