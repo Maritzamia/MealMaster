@@ -28,7 +28,8 @@ public:
     void displayMenu() const;
 
     // Adds a new item to the menu (prevents duplicates)
-    void addItem(const std::string& name, double price);
+    void addItem(const std::string& name, double price, class Inventory& inventory);
+
 
     // Gets the menu item by index (for ordering by number)
     MenuItem getItem(int index) const;
