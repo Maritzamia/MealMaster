@@ -1,4 +1,5 @@
 #include "Menu.h"
+#include "Inventory.h"  // ✅ Include Inventory so we can modify it
 #include <fstream>
 #include <iostream>
 #include <algorithm>
@@ -55,14 +56,21 @@ void Menu::displayMenu() const {
     }
 }
 
-// Adds a new item if it doesn't already exist
-void Menu::addItem(const std::string& name, double price) {
+//  Modified to also add to inventory
+void Menu::addItem(const std::string& name, double price, Inventory& inventory) {
     if (itemExists(name)) {
         std::cout << "Item \"" << name << "\" already exists in the menu.\n";
         return;
     }
+
     items.push_back({ name, price });
     std::cout << "Item \"" << name << "\" added to menu.\n";
+
+    //  Automatically add to inventory with quantity 0 if not already there
+    if (!inventory.itemExists(name)) {
+        inventory.setQuantity(name, 0);
+        std::cout << "Item \"" << name << "\" also added to inventory with quantity 0.\n";
+    }
 }
 
 // Returns item by index
