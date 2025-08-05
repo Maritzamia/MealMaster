@@ -1,74 +1,90 @@
 #include "Inventory.h"
 #include <fstream>
 #include <iostream>
+#include <algorithm>
+#include <cctype>
+
+// Helper: convert string to lowercase
+std::string Inventory::toLower(const std::string& str) const {
+    std::string lowered = str;
+    std::transform(lowered.begin(), lowered.end(), lowered.begin(), ::tolower);
+    return lowered;
+}
+
+// Helper: trim whitespace from both ends
+std::string Inventory::trim(const std::string& str) const {
+    size_t first = str.find_first_not_of(" \t\n\r");
+    size_t last = str.find_last_not_of(" \t\n\r");
+    return (first == std::string::npos || last == std::string::npos) ? "" : str.substr(first, last - first + 1);
+}
 
 // Load inventory data from a text file
-// Clears existing inventory and reads pairs of item names and quantities from the file.
-// If the file can't be opened, prints an error message.
 void Inventory::loadFromFile(const std::string& filename) {
-    items.clear();  // Clear current inventory list before loading new data
+    items.clear();
     std::ifstream file(filename);
     if (!file) {
         std::cerr << "\nCould not open inventory file.\n";
-        return;  // Early exit if file can't be opened
+        return;
     }
 
     std::string name;
     int quantity;
-    // Reads the item name (line) and quantity (integer) repeatedly until EOF
     while (getline(file, name) && file >> quantity) {
-        file.ignore();  // Ignore leftover newline after quantity reading
-        items.push_back({ name, quantity });  // Add item to inventory list
+        file.ignore(); // Ignore leftover newline
+        name = trim(name);
+        items.push_back({ name, quantity });
     }
 }
 
 // Save current inventory to a text file
-// Writes each item's name and quantity on separate lines for easy reading and writing.
 void Inventory::saveToFile(const std::string& filename) {
     std::ofstream file(filename);
     for (const auto& item : items) {
-        file << item.name << "\n" << item.quantity << "\n";  // Save each inventory item with its quantity
+        file << item.name << "\n" << item.quantity << "\n";
     }
 }
 
-// Display the current inventory to the console
-// Prints each item and its quantity for user visibility.
+// Display inventory
 void Inventory::displayInventory() const {
     std::cout << "\n--- Inventory ---\n\n";
     for (const auto& item : items) {
-        std::cout << item.name << ": " << item.quantity << "\n";  // Print name and current quantity
+        std::cout << item.name << ": " << item.quantity << "\n";
     }
 }
 
-// Update the quantity of an existing inventory item or add it if it doesn't exist
-// The change can be positive (restocking) or negative (selling items).
+// Update quantity (case-insensitive)
 void Inventory::updateQuantity(const std::string& name, int change) {
+    std::string normalizedName = toLower(trim(name));
     for (auto& item : items) {
-        if (item.name == name) {
-            item.quantity += change;  // Adjust quantity based on change
-            return;  // Exit after update
+        if (toLower(trim(item.name)) == normalizedName) {
+            item.quantity += change;
+            return;
         }
     }
-    // If item not found, add it as a new item with the given quantity (could be negative, so be cautious)
-    items.push_back({ name, change });
+    // If not found, add new
+    items.push_back({ trim(name), change });
 }
+
+// Set quantity (overwrite)
+void Inventory::setQuantity(const std::string& name, int quantity) {
+    std::string normalizedName = toLower(trim(name));
+    for (auto& item : items) {
+        if (toLower(trim(item.name)) == normalizedName) {
+            item.quantity = quantity;
+            return;
+        }
+    }
+    // If not found, add new
+    items.push_back({ trim(name), quantity });
+}
+
+// Check if item exists (case-insensitive)
 bool Inventory::itemExists(const std::string& itemName) const {
+    std::string normalizedName = toLower(trim(itemName));
     for (const auto& item : items) {
-        if (item.name == itemName) {
+        if (toLower(trim(item.name)) == normalizedName) {
             return true;
         }
     }
     return false;
-}
-// NEW FUNCTION: Set quantity explicitly for an inventory item
-// This overwrites the current quantity or adds the item if it doesn't exist
-void Inventory::setQuantity(const std::string& name, int quantity) {
-    for (auto& item : items) {
-        if (item.name == name) {
-            item.quantity = quantity;  // Overwrite with new quantity
-            return;
-        }
-    }
-    // Item does not exist; add as new with specified quantity
-    items.push_back({ name, quantity });
 }
