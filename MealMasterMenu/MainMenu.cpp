@@ -124,36 +124,38 @@ int main() {
             inventory.displayInventory();
             break;
 
-        case 4: {
-            // Add a new item to the menu
-            string name;
-            double price;
+      case 4: {
+     // Add a new item to the menu
+     string name;
+     double price;
 
-            clearCin(); // Clear input buffer before getline
+     clearCin(); // Clear input buffer before getline
 
-            // Validate item name: no numbers or symbols
-            do {
-                cout << "Enter new item name (letters and spaces only): ";
-                getline(cin, name);
-                if (!isValidName(name)) {
-                    cout << "Invalid name. Please use letters and spaces only.\n";
-                }
-            } while (!isValidName(name));
+     // Validate item name: no numbers or symbols
+     do {
+         cout << "Enter new item name (letters and spaces only): ";
+         getline(cin, name);
+         if (!isValidName(name)) {
+             cout << "Invalid name. Please use letters and spaces only.\n";
+         }
+     } while (!isValidName(name));
 
-            cout << "Enter price: ";
-            cin >> price;
+     cout << "Enter price: ";
+     cin >> price;
 
-            if (cin.fail() || price < 0) {
-                clearCin();
-                cout << "Invalid price.\n";
-                break;
-            }
+     if (cin.fail() || price < 0) {
+         clearCin();
+         cout << "Invalid price.\n";
+         break;
+     }
 
-            menu.addItem(name, price);
-            menu.saveToFile("menu.txt");
-            cout << "Item added to menu.\n";
-            break;
-        }
+     menu.addItem(name, price, inventory);
+     menu.saveToFile("menu.txt");
+     inventory.saveToFile("inventory.txt");
+
+     cout << "Item added to menu and inventory synced.\n";
+     break;
+ }
 
         case 5: {
             // Employee management menu
@@ -259,3 +261,4 @@ int main() {
 
     return 0;
 }
+
